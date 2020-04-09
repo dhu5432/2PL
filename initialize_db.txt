@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS bank
+DROP TABLE IF EXISTS customer
+CREATE TABLE bank (AccountNumber INT, Balance INT, Branch VARCHAR(255), Assets INT, AccountType VARCHAR(255))
+CREATE TABLE customer (AccountNumber INT, LastName VARCHAR(255), FirstName VARCHAR(255), State VARCHAR(255), Postal INT, CreditLimit INT, NumberOfCats INT)
+INSERT INTO bank (AccountNumber, Balance, Branch, Assets, AccountType) VALUES (00000, 100, 'New York', 50000, 'Checking')
+INSERT INTO bank (AccountNumber, Balance, Branch, Assets, AccountType) VALUES (00001, 2500, 'Chicago', 43000, 'Checking')
+INSERT INTO bank (AccountNumber, Balance, Branch, Assets, AccountType) VALUES (00002, 80000, 'New York', 20000, 'CD')
+INSERT INTO bank (AccountNumber, Balance, Branch, Assets, AccountType) VALUES (00003, 3745, 'San Francisco', 80000, 'CD')
+INSERT INTO bank (AccountNumber, Balance, Branch, Assets, AccountType) VALUES (00004, 2000, 'Chicago', 200, 'Savings')
+INSERT INTO bank (AccountNumber, Balance, Branch, Assets, AccountType) VALUES (00005, 9000, 'St. Louis', 30, 'Savings')
+INSERT INTO bank (AccountNumber, Balance, Branch, Assets, AccountType) VALUES (00006, 496, 'Tampa', 8040, 'Checking')

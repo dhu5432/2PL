@@ -25,7 +25,13 @@ if __name__=='__main__':
     mydb = mysql.connector.connect(
         host='35.232.71.137',
         user='root',
-        passwd='cs542'
+        passwd='cs542',
+        database='cs542'
     )
-    print(mydb)
+    mycursor = mydb.cursor()
+    f = open("initialize_db.txt", "r")
+    for line in f:
+        mycursor.execute(line)
+        mydb.commit()
+
     eventlet.wsgi.server(eventlet.listen(('', 8001)), app)
