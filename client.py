@@ -42,6 +42,11 @@ def transaction_granted(data):
     global transaction_num
     print("Locks for transaction {} granted".format(data))
     sql_statements = []
+    try:
+        sio.emit('transaction request', master_list_of_transactions[transaction_num])
+    except IndexError:
+        print("Finished processing transactions from this site")
+    transaction_num+=1
     data_items = []
     transaction = map_of_transactions[data]
     mydb = mysql.connector.connect(
@@ -68,7 +73,7 @@ def transaction_granted(data):
     combined.append(sql_statements)
     combined.append(data)
     print("Successfully executed transaction {}".format(data))
-    sio.emit('execute_sql', combined)
+    sio.emit('execute',  combined)
 
 
 
@@ -120,5 +125,6 @@ if __name__ =='__main__' :
            master_list_of_transactions.append(need_locks_for)
            need_locks_for = []
    
-    for i in range(0, len(master_list_of_transactions)):
-        sio.emit('transaction request', master_list_of_transactions[i])
+    
+    sio.emit('transaction request', master_list_of_transactions[transaction_num])
+    transaction_num+=1
