@@ -67,6 +67,7 @@ def transaction_granted(data):
     combined.append(data_items)
     combined.append(sql_statements)
     combined.append(data)
+    print("Successfully executed transaction {}".format(data))
     sio.emit('execute_sql', combined)
 
 
