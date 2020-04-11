@@ -22,6 +22,7 @@ def disconnect():
 
 @sio.on('execute sql')
 def execute_sql(data):
+
     mydb = mysql.connector.connect(
         host='104.154.65.18',
         user='root',
@@ -39,6 +40,7 @@ def execute_sql(data):
 @sio.on('transaction granted')
 def transaction_granted(data):
     global transaction_num
+    print("Locks for transaction {} granted".format(data))
     sql_statements = []
     data_items = []
     transaction = map_of_transactions[data]
@@ -64,13 +66,9 @@ def transaction_granted(data):
     combined = []
     combined.append(data_items)
     combined.append(sql_statements)
-     sio.emit('execute sql', combined)
+    combined.append(data)
+    sio.emit('execute_sql', combined)
 
-    try:
-        sio.emit('transaction request', master_list_of_transactions[transaction_num])
-        transaction_num+=1
-    except IndexError:
-        print("Finished processing transaction originating from this site")
 
 
 
@@ -120,6 +118,6 @@ if __name__ =='__main__' :
            map_of_transactions[transaction_id] = need_locks_for
            master_list_of_transactions.append(need_locks_for)
            need_locks_for = []
-    
-    sio.emit('transaction request', master_list_of_transactions[transaction_num])
-    transaction_num+=1
+   
+    for i in range(0, len(master_list_of_transactions)):
+        sio.emit('transaction request', master_list_of_transactions[i])

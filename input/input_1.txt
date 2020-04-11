@@ -1,0 +1,13 @@
+BT
+R 100 Balance  
+R 408 Assets 
+W 308 Balance 100 
+C
+BT
+R 208 Balance 
+R 423 Assets 
+W 788 Balance 9000
+W 897 Balance 234
+W 22 Assets 900
+W 432 Assets 40
+C
