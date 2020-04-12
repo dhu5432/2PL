@@ -46,6 +46,7 @@ def transaction_granted(data):
         sio.emit('transaction request', master_list_of_transactions[transaction_num])
     except IndexError:
         print("Finished processing transactions from this site")
+        print("POOP")
     transaction_num+=1
     data_items = []
     transaction = map_of_transactions[data]
