@@ -85,7 +85,7 @@ def execute_sql(sid, data):
                     lock_table[current_operation[0]][sid_to_id[transaction.sid]] = current_operation[1]
                     lock_table_lock.release()
             if able_to_execute:
-                sio.emit('transaction granted', transaction.tid, room=sid)
+                sio.emit('transaction granted', transaction.tid, room=transaction.sid)
 
         
 
@@ -93,6 +93,7 @@ def execute_sql(sid, data):
 @sio.on('transaction request')
 def transaction_request(sid, data):
     temp = []
+    print("{} is requesting a transaction".format(sid))
     for i in range(1, len(data)):
         temp.append([int(data[i][1]), data[i][0]])
 
