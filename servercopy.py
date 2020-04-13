@@ -19,7 +19,7 @@ for i in range(1,999):
     lock_table[i] = ['O', 'O', 'O', 'O'] 
 
 sid_to_id = {}
-sid_num = 1
+sid_num = 0
 queue_of_operations = deque()
 
 class transaction:
@@ -61,39 +61,45 @@ def lookup_lock(operation, data_item):
 
 @sio.on('execute')
 def execute_sql(sid, data): 
-    print("Executing transaction {} from site {} on all sites".format(data[2], sid))
-    sio.emit('execute_sql', data[1])
+    global queue_of_operations
+    print("Executing transaction {} from site {} on all sites".format(data[2], sid_to_id[sid]))
+    sio.emit('execute_sql', data[1], skip_sid=sid)
     lock_table_lock.acquire()
     for i in data[0]:
         lock_table[int(i)][sid_to_id[sid]] = 'O'
     lock_table_lock.release()
-    print("Releasing locks used in transaction {} from site {}".format(data[2], sid))
+    print("Released locks used in transaction {} from site {}".format(data[2], sid_to_id[sid]))
    
     if len(queue_of_operations) > 0:
-            able_to_execute = True
-            transaction = queue_of_operations.popleft()
-            for i in range (transaction.index, len(transaction.sorted_lock_requests)):
-                current_operation = transaction.sorted_lock_requests[i]
+            temp_queue = deque()
+            while(len(queue_of_operations)>0):
+                able_to_execute = True
+                transaction = queue_of_operations.popleft()
+                for i in range (transaction.index, len(transaction.sorted_lock_requests)):
+                    current_operation = transaction.sorted_lock_requests[i]
                 
-                if not lookup_lock(current_operation[1], current_operation[0]):
-                    transaction.index = i
-                    queue_of_operations.appendleft(transaction)
-                    able_to_execute = False
-                    break
-                else:    
-                    lock_table_lock.acquire()
-                    lock_table[current_operation[0]][sid_to_id[transaction.sid]] = current_operation[1]
-                    lock_table_lock.release()
-            if able_to_execute:
-                sio.emit('transaction granted', transaction.tid, room=transaction.sid)
+                    if not lookup_lock(current_operation[1], current_operation[0]):
+                        transaction.index = i
+                        temp_queue.append(transaction)
+                        #queue_of_operations.appendleft(transaction)
+                        able_to_execute = False
+                        break
+                    else:    
+                        lock_table_lock.acquire()
+                        lock_table[current_operation[0]][sid_to_id[transaction.sid]] = current_operation[1]
+                        lock_table_lock.release()
+                if able_to_execute:
 
+                    sio.emit('transaction granted', transaction.tid, room=transaction.sid)
+            queue_of_operations = temp_queue
         
 
 
 @sio.on('transaction request')
 def transaction_request(sid, data):
+    global queue_of_operations
     temp = []
-    print("{} is requesting a transaction".format(sid))
+    print("{} is requesting a transaction".format(sid_to_id[sid]))
     for i in range(1, len(data)):
         temp.append([int(data[i][1]), data[i][0]])
 
@@ -102,7 +108,7 @@ def transaction_request(sid, data):
     for i in sorted_lock_requests:
 
         if not lookup_lock(i[1], i[0]):
-            print("Transaction {} from site {} could not be executed immediately".format(data[0], sid))
+            print("Transaction {} from site {} could not be executed immediately".format(data[0], sid_to_id[sid]))
             t1 = transaction(sid, data[0], sorted_lock_requests, index)
             queue_of_operations.append(t1)
             return
@@ -124,16 +130,15 @@ def transaction_request(sid, data):
 @sio.event
 def connect(sid, environ):
     global sid_num
-    print("Site {} connected".format(sid))
+    print("Site {} connected".format(sid_num))
     connection_lock.acquire()
-    print(sid_num)
     sid_to_id[sid] = sid_num
     sid_num += 1
     connection_lock.release()
 
 @sio.event
 def disconnect(sid):
-    print("Site {} disconnected".format(sid))
+    print("Site {} disconnected".format(sid_to_id[sid]))
 
 def empty_deque():
     while True:
