@@ -1,6 +1,7 @@
 import socketio
 import mysql.connector
 import argparse
+import time
 
 sio = socketio.Client()
 map_of_transactions = {}
@@ -24,7 +25,7 @@ def disconnect():
 def execute_sql(data):
 
     mydb = mysql.connector.connect(
-        host='104.154.65.18',
+        host='34.70.176.240',
         user='root',
         passwd='cs542',
         database='cs542'
@@ -42,16 +43,16 @@ def transaction_granted(data):
     global transaction_num
     print("Locks for transaction {} granted".format(data))
     sql_statements = []
-    try:
-        sio.emit('transaction request', master_list_of_transactions[transaction_num])
-    except IndexError:
-        print("Finished processing transactions from this site")
-        print("POOP")
+    #try:
+    #    sio.emit('transaction request', master_list_of_transactions[transaction_num])
+    #except IndexError:
+    #    print("Finished processing transactions from this site")
+    #    print("POOP")
     transaction_num+=1
     data_items = []
     transaction = map_of_transactions[data]
     mydb = mysql.connector.connect(
-        host='104.154.65.18',
+        host='34.70.176.240',
         user='root',
         passwd='cs542',
         database='cs542'
@@ -85,7 +86,7 @@ if __name__ =='__main__' :
     args = parser.parse_args()
     
     mydb = mysql.connector.connect(
-        host='104.154.65.18',
+        host='34.70.176.240',
         user='root',
         passwd='cs542',
         database='cs542'
@@ -126,6 +127,7 @@ if __name__ =='__main__' :
            master_list_of_transactions.append(need_locks_for)
            need_locks_for = []
    
-    
-    sio.emit('transaction request', master_list_of_transactions[transaction_num])
+    for i in master_list_of_transactions:
+        time.sleep(0.1)
+        sio.emit('transaction request', i)
     transaction_num+=1
