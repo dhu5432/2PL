@@ -6,6 +6,7 @@ import threading
 import mysql.connector
 from collections import deque
 from engineio.payload import Payload
+Payload.max_decode_packets = 500
 
 blocked = 0
 executed = 0
@@ -101,7 +102,7 @@ def execute_sql(sid, data):
                 if able_to_execute:
                     executed_lock.acquire()
                     executed+=1
-                    if executed == 12000:
+                    if executed == 4000:
                         end = time.time()
                     executed_lock.release()
                     sio.emit('transaction granted', transaction.tid, room=transaction.sid)
@@ -153,7 +154,7 @@ def transaction_request(sid, data):
     if executed == 0:
         start = time.time()
     executed+=1
-    if executed == 12000:
+    if executed == 4000:
         end = time.time()
 
     executed_lock.release()
@@ -162,6 +163,7 @@ def transaction_request(sid, data):
 
 @sio.event
 def connect(sid, environ):
+    print(sid)
     global sid_num
     print("Site {} connected".format(sid_num))
     connection_lock.acquire()
@@ -173,6 +175,8 @@ def connect(sid, environ):
 def disconnect(sid):
     global blocked
     global executed
+    global end
+    global start
     print("{} transactions blocked in total".format(blocked))
     print("{} transactions executed in total".format(executed))
     print("{} took to execute all {} transactions".format(end-start, executed))
