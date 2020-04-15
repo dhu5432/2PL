@@ -1,8 +1,35 @@
-## Installing required dependencies
+### Infrastructure
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the required dependencies.
+The entire project run on the [Google Cloud Platform](https://cloud.google.com/) using VMs and CloudSQL instances. To request access to the
+project, please give me an email to add. 
 
-```bash
-pip3 install -r requirements.txt
-```
+### Description of Files
 
+```servercopy.py``` This is the centralized transaction/lock manager that holds the lock table. 
+
+```client.py``` This is a data site that is connected to a MySQL database. Within the Google Cloud Platform, I have 4 separate VMs that have a ```client.py``` script, but with lines ```27``` and ```89``` changed because each VM/data site is connected to its own MySQL database. 
+
+### Walkthrough of Algorithm*
+
+The algorithm starts at a data site sending a [transaction request](https://github.com/dhu5432/2PL/blob/master/client.py#L132) message with locally identifiable transaction ID, with a list of data rows and their operations for that specific transaction. So a transaction request with the payload 
+
+```[34, [R, 100, Balance, [W, 308, Assets, 100]]```
+
+means that this is transaction 34 from that data site, and the transaction wants to read row 100's balance and change row 308's Assets to 100. 
+
+The lock manager [receives the transaction request](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L113) and processes it as it sees fit. If the transaction is granted, it replies back to the data site with a [transaction granted](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L161) message. 
+
+Once the data site [receives](https://github.com/dhu5432/2PL/blob/master/client.py#L41) the transaction granted message, it executesthe corresponding queries and responds back with an [execute](https://github.com/dhu5432/2PL/blob/master/client.py#L78) message. 
+
+Once the lock manager [receives](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L69) the execute message. It broadcasts to the other 3 data sites the SQL queries to be executed and releases all locks associated with the current transaction request. 
+
+
+*A much more detailed walkthrough of my implementation's algorithm is given in the project report, but this is to help associate the code written with each step of the algorithm.
+
+### Output
+My report mentions that "I add a multitude of ```print``` statements throughout my implementation in order to understand what the system is doing at any given time. I detail the kind of output my system gives in this section. 
+
+#### Lock Manager Output
+```i is requesting a transaction``` When some data site ```i``` sends a transaction request message to the lock manager, the lock manager outputs to the console in order to acknowledge the receipt of the transaction request. 
+
+```Transaction j from site i is a Read operation on row k, but another transaction is currently writing to it``` When data site ```i``` sends transaction ```j``` to the lock manager, the lock manager looks in the lock table and outputs if it is currently unable to grant the transaction because another transaction has a write lock on one of the rows transaction ```j``` needs a read lock for. 
