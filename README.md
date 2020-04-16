@@ -62,7 +62,7 @@ My report mentions that "I add a multitude of ```print``` statements throughout 
     * Run ```python3 servercopy.py``` 
 * On the VMs labeled ```site1, site2, site3, and site4```
     * ```cd 2PL```
-    * Run ```python3 client.py ---input_file=input/all_same_write.txt``` where ```all_same_write.txt``` is the list of queries to submit to the data site
+    * Run ```python3 client.py ---input_file=input/all_same_write.txt``` where ```input/all_same_write.txt``` is the list of queries to submit to the data site
     
 ##### On a local machine**
 * Initialize 5 VMs on your local machine and obtain their IP addresses
@@ -72,7 +72,7 @@ My report mentions that "I add a multitude of ```print``` statements throughout 
 * Change the MySQL IP address in each of the client.py's to reflect the local IP address of the MySQL databases you created. [Here](https://github.com/dhu5432/2PL/blob/master/client.py#L28) and [here](https://github.com/dhu5432/2PL/blob/master/client.py#L55). My code assumes that there already exists a database called ```cs542``` in each of the MySQL databases. It also assumes that the user is ```root``` and the password is ```cs542```. You can change that in the code accordingly. 
 * Run ```pip3 install -r Requirements.txt```
 * On the VM you designate as the lock manager: Run ```python3 servercopy.py``` 
-* On the VMs you designate as the data sites: Run ```python3 client.py ---input_file=input/all_same_write.txt``` where ```all_same_write.txt``` is the list of queries to submit to the data site\
+* On the VMs you designate as the data sites: Run ```python3 client.py ---input_file=input/all_same_write.txt``` where ```input/all_same_write.txt``` is the list of queries to submit to the data site
 
 \**I HIGHLY recommend that you run my project on Google Cloud since there will be SIGNIFICANTLY less setup involved. 
 
