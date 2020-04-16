@@ -63,6 +63,7 @@ My report mentions that "I add a multitude of ```print``` statements throughout 
 * On the VMs labeled ```site1, site2, site3, and site4```
     * ```cd 2PL```
     * Run ```python3 client.py ---input_file=input/all_same_write.txt``` where ```input/all_same_write.txt``` is the list of queries to submit to the data site
+* Make sure to restart the lock manager and data sites (```Control c```) between each scenario/input file. 
     
 ##### On a local machine**
 * Initialize 5 VMs on your local machine and obtain their IP addresses
