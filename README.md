@@ -29,7 +29,7 @@ Once the lock manager [receives](https://github.com/dhu5432/2PL/blob/master/serv
 *A much more detailed walkthrough of my implementation's algorithm is given in the project report, but this is to help associate the code written with each step of the algorithm.
 
 ### Output
-My report mentions that "I add a multitude of ```print``` statements throughout my implementation in order to understand what the system is doing at any given time. I detail the kind of output my system gives in this section. 
+My report mentions that "I add a multitude of ```print``` statements throughout my implementation in order to understand what the system is doing at any given time". I detail the kind of output my system gives in this section. 
 
 #### Lock Manager Output
 ```i is requesting a transaction``` When some data site ```i``` sends a transaction request message to the lock manager, the lock manager outputs to the console in order to acknowledge the receipt of the transaction request. [In the code](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L121)
