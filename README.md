@@ -47,6 +47,10 @@ My report mentions that "I add a multitude of ```print``` statements throughout 
 
 ```Successfully executed transaction i``` After the locks for transaction ```i``` have been granted, it connects to the MySQL database and executes all corresponding SQL queries. Once it finishes, this statement outputs. [In the code](https://github.com/dhu5432/2PL/blob/master/client.py#L77)
 
+#### Test Cases to run during demo
 
+* All 4 data sites running the transactions in [all_same_read.txt](https://github.com/dhu5432/2PL/blob/master/input/all_same_read.txt). I show that even though all of these transaction only read a single row, since read locks are compatible with each other, they transactions are executed immediately upon receipt by the lock manager with no blocking. 
+
+* All 4 data sites running the transactions in [all_same_write.txt](https://github.com/dhu5432/2PL/blob/master/input/all_same_write.txt). I show that since all of these transactions are writing to a single row, and write locks are incompatible with each other, almost all the transaction requests are blocked by the lock manager to be executed later. 
 
 
