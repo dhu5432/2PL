@@ -1,13 +1,15 @@
 ### Infrastructure
 
-The entire project run on the [Google Cloud Platform](https://cloud.google.com/) using VMs and CloudSQL instances. To request access to the
-project, please give me an email to add. 
+The entire project runs on the [Google Cloud Platform](https://cloud.google.com/) using VMs and CloudSQL instances. To request access to the
+project (and the VMs and databases associated with the system), please give me an email to add. 
 
 ### Description of Files
 
 ```servercopy.py``` This is the centralized transaction/lock manager that holds the lock table. 
 
 ```client.py``` This is a data site that is connected to a MySQL database. Within the Google Cloud Platform, I have 4 separate VMs that have a ```client.py``` script, but with lines ```27``` and ```89``` changed because each VM/data site is connected to its own MySQL database. 
+
+```initial_db.sql``` When every data site begins running, it runs this file in order to make sure all databases on all data sites are in a consistent state with each other. 
 
 ### Walkthrough of Algorithm*
 
