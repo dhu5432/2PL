@@ -30,6 +30,14 @@ Once the lock manager [receives](https://github.com/dhu5432/2PL/blob/master/serv
 My report mentions that "I add a multitude of ```print``` statements throughout my implementation in order to understand what the system is doing at any given time. I detail the kind of output my system gives in this section. 
 
 #### Lock Manager Output
-```i is requesting a transaction``` When some data site ```i``` sends a transaction request message to the lock manager, the lock manager outputs to the console in order to acknowledge the receipt of the transaction request. 
+```i is requesting a transaction``` When some data site ```i``` sends a transaction request message to the lock manager, the lock manager outputs to the console in order to acknowledge the receipt of the transaction request. [In the code](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L121)
 
-```Transaction j from site i is a Read operation on row k, but another transaction is currently writing to it``` When data site ```i``` sends transaction ```j``` to the lock manager, the lock manager looks in the lock table and outputs if it is currently unable to grant the transaction because another transaction has a write lock on one of the rows transaction ```j``` needs a read lock for. 
+```Transaction j from site i is a Read operation on row k, but another transaction is currently writing to it``` When data site ```i``` sends transaction ```j``` to the lock manager, the lock manager looks in the lock table and outputs if it is currently unable to grant the transaction because another transaction has a write lock on one of the rows transaction ```j``` needs a read lock for. [In the code](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L132)
+
+```Transaction j from site i is a Write operation on row k, but another transaction is currently reading or writing ot it``` When data site ```i``` sends transaction ```j``` to the lock manager, the lock manager looks in the lock table and outputs if it is currently unable to grant the transaction because another transaction is currently reading or writing to row ```j```. [In the code](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L134)
+
+```Executing transaction j from site i on all sites``` When data site ```i``` has successfully executed transaction ```j```, it sends the lock manager the SQL queries that need to be executed at all other data sites. This outputs right before the lock manager broadcasts the SQL queries to execute on the other data sites. [In the code](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L134)
+
+```Released locks used in transaction j from site i``` After the lock manager broadcasts to all data sites the SQL queries to be executed for transaction j, it releases the locks associated with transaction j and this outputs. [In the code](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L82)
+
+
