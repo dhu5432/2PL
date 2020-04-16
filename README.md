@@ -40,4 +40,11 @@ My report mentions that "I add a multitude of ```print``` statements throughout 
 
 ```Released locks used in transaction j from site i``` After the lock manager broadcasts to all data sites the SQL queries to be executed for transaction j, it releases the locks associated with transaction j and this outputs. [In the code](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L82)
 
+#### Data Site Output
+```Locks for transaction i granted``` As mentioned in the report, at each data site, each transaction is given an ID. A transaction ID and a data site ID can globally identify all transactions. This output means that transaction ```i``` can now be executed on the site that outputs this statement. [In the code](https://github.com/dhu5432/2PL/blob/master/client.py#L44)
+
+```Successfully executed transaction i``` After the locks for transaction ```i``` have been granted, it connects to the MySQL database and executes all corresponding SQL queries. Once it finishes, this statement outputs. [In the code](https://github.com/dhu5432/2PL/blob/master/client.py#L77)
+
+
+
 
