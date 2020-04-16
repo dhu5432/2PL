@@ -67,6 +67,7 @@ My report mentions that "I add a multitude of ```print``` statements throughout 
 ##### On a local machine**
 * Initialize 5 VMs on your local machine and obtain their IP addresses
 * Initialize MySQL database instances on 4 of the VMs
+* Clone this repository intoa all 5 VMs
 * Choose what port your want the lock manager to listen on. Currently, it is listening on port 8001 but you can [change](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L208) that if you would like
 * Change the IP address in [client.py](https://github.com/dhu5432/2PL/blob/master/client.py#L102) to connect the IP address of the VM that is to be the lock manager
 * Change the MySQL IP address in each of the client.py's to reflect the local IP address of the MySQL databases you created. [Here](https://github.com/dhu5432/2PL/blob/master/client.py#L28) and [here](https://github.com/dhu5432/2PL/blob/master/client.py#L55). My code assumes that there already exists a database called ```cs542``` in each of the MySQL databases. It also assumes that the user is ```root``` and the password is ```cs542```. You can change that in the code accordingly. 
