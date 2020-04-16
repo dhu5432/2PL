@@ -1,7 +1,7 @@
 ### Infrastructure
 
 The entire project runs on the [Google Cloud Platform](https://cloud.google.com/) using VMs and CloudSQL instances. To request access to the
-project (and the VMs and databases associated with the system), please give me an email to add. 
+project (and the VMs and databases associated with the system), please give me a gmail to add. 
 
 ### Description of Files
 
@@ -52,5 +52,29 @@ My report mentions that "I add a multitude of ```print``` statements throughout 
 * All 4 data sites running the transactions in [all_same_read.txt](https://github.com/dhu5432/2PL/blob/master/input/all_same_read.txt). I show that even though all of these transaction only read a single row, since read locks are compatible with each other, they transactions are executed immediately upon receipt by the lock manager with no blocking. 
 
 * All 4 data sites running the transactions in [all_same_write.txt](https://github.com/dhu5432/2PL/blob/master/input/all_same_write.txt). I show that since all of these transactions are writing to a single row, and write locks are incompatible with each other, almost all the transaction requests are blocked by the lock manager to be executed later. 
+
+#### How to run
+
+##### On Google Cloud
+* ```ssh``` into all 5 VMs from the Google Cloud Console
+* On the VM labeled ```central-site```:
+    * ```cd 2PL```
+    * Run ```python3 servercopy.py``` 
+* On the VMs labeled ```site1, site2, site3, and site4```
+    * ```cd 2PL```
+    * Run ```python3 client.py ---input_file=input/all_same_write.txt``` where ```all_same_write.txt``` is the list of queries to submit to the data site
+    
+##### On a local machine**
+* Initialize 5 VMs on your local machine and obtain their IP addresses
+* Initialize MySQL database instances on 4 of the VMs
+* Choose what port your want the lock manager to listen on. Currently, it is listening on port 8001 but you can [change](https://github.com/dhu5432/2PL/blob/master/servercopy.py#L208) that if you would like
+* Change the IP address in [client.py](https://github.com/dhu5432/2PL/blob/master/client.py#L102) to connect the IP address of the VM that is to be the lock manager
+* Change the MySQL IP address in each of the client.py's to reflect the local IP address of the MySQL databases you created. [Here](https://github.com/dhu5432/2PL/blob/master/client.py#L28) and [here](https://github.com/dhu5432/2PL/blob/master/client.py#L55). My code assumes that there already exists a database called ```cs542``` in each of the MySQL databases. It also assumes that the user is ```root``` and the password is ```cs542```. You can change that in the code accordingly. 
+* Run ```pip3 install -r Requirements.txt```
+* On the VM you designate as the lock manager: Run ```python3 servercopy.py``` 
+* On the VMs you designate as the data sites: Run ```python3 client.py ---input_file=input/all_same_write.txt``` where ```all_same_write.txt``` is the list of queries to submit to the data site\
+
+\**I HIGHLY recommend that you run my project on Google Cloud since there will be SIGNIFICANTLY less setup involved. 
+
 
 
